@@ -296,7 +296,7 @@ img {
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: rgba(0, 115, 230, 0.05);
+  background: rgba(0, 115, 230, 0.10);
   z-index: 0;
 }
 
@@ -308,7 +308,7 @@ img {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: rgba(255, 149, 0, 0.05);
+  background: rgba(255, 149, 0, 0.10);
   z-index: 0;
 }
 
