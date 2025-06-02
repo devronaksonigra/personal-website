@@ -679,7 +679,7 @@ img {
 
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 
@@ -751,13 +751,15 @@ img {
 /* Responsive portfolio section */
 @media screen and (max-width: 992px) {
   .portfolio-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
 }
 
 @media screen and (max-width: 768px) {
   .portfolio-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .portfolio-filters {
