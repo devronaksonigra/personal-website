@@ -508,29 +508,23 @@ img {
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skill-icon {
+  width: 24px;
+  height: 24px;
+  fill: var(--primary-color);
+  color: var(--primary-color);
+  flex-shrink: 0;
 }
 
 .skill-name {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
   font-weight: 500;
   color: var(--dark-color);
-}
-
-.skill-bar {
-  height: 10px;
-  background-color: var(--light-color);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.skill-level {
-  height: 100%;
-  background: linear-gradient(45deg, var(--primary-color), #5cb3ff);
-  border-radius: 10px;
-  width: 0;
-  transition: width 1.5s ease-out;
+  flex: 1;
 }
 
 /* Responsive skills section */
@@ -593,13 +587,16 @@ img {
   height: 80px;
   line-height: 80px;
   border-radius: 50%;
-  background-color: var(--light-color);
   margin: 0 auto 1.5rem;
-  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.service-card:hover .service-icon {
-  transform: rotateY(180deg);
+.service-icon svg {
+  width: 40px;
+  height: 40px;
+  fill: var(--primary-color);
 }
 
 .service-card h3 {
@@ -611,31 +608,6 @@ img {
 .service-card p {
   color: var(--secondary-color);
   line-height: 1.7;
-}
-
-/* Service icons (placeholder for actual icons) */
-.icon-code::before {
-  content: '🖥️';
-}
-
-.icon-layout::before {
-  content: '🏗️';
-}
-
-.icon-users::before {
-  content: '👥';
-}
-
-.icon-accessibility::before {
-  content: '♿';
-}
-
-.icon-briefcase::before {
-  content: '💼';
-}
-
-.icon-book::before {
-  content: '📚';
 }
 
 /* Responsive services section */
@@ -800,10 +772,15 @@ img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: var(--light-color);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.contact-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--primary-color);
 }
 
 .contact-text h3 {
@@ -888,19 +865,6 @@ img {
   background-color: #0062c4;
 }
 
-/* Contact icons (placeholder for actual icons) */
-.icon-mail::before {
-  content: '✉️';
-}
-
-.icon-phone::before {
-  content: '📱';
-}
-
-.icon-linkedin::before {
-  content: '🔗';
-}
-
 /* Footer */
 #footer {
   background-color: var(--dark-color);
@@ -957,10 +921,24 @@ img {
   line-height: 40px;
   text-align: center;
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-social a svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
 }
 
 .footer-social a:hover {
   background-color: var(--primary-color);
+  color: white;
+}
+
+.footer-social a:hover svg {
+  fill: white;
 }
 
 .footer-bottom {
