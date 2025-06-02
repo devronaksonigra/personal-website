@@ -453,12 +453,12 @@ img {
 }
 
 .download-btn {
-  background-color: var(--dark-color);
+  background-color: var(--primary-color);
   color: white;
 }
 
 .download-btn:hover {
-  background-color: var(--secondary-color);
+  background-color: #0062c4;
   color: white;
 }
 
