@@ -335,6 +335,7 @@ img {
   display: flex;
   gap: 1rem;
   animation: fadeInUp 1.2s ease;
+  align-items: center;
 }
 
 .hero-image {
@@ -403,6 +404,7 @@ img {
 
   .hero-buttons {
     justify-content: center;
+    align-items: center;
   }
 
   .profile-placeholder {
