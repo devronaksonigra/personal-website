@@ -687,11 +687,6 @@
       document.getElementById('currentYear').textContent =
         new Date().getFullYear();
 
-      // iOS Download Fix
-      function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      }
-
       // Mobile Menu Toggle
       const menuToggle = document.querySelector('.menu-toggle');
       const navLinks = document.querySelector('.nav-links');
