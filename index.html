@@ -800,6 +800,61 @@
 
       // Call once on page load to check if section is already in view
       document.addEventListener('DOMContentLoaded', animateSkillBars);
+
+      // Floating downloads functionality
+      function toggleDownloads() {
+        const popover = document.getElementById('downloadsPopover');
+        const downloadIcon = document.querySelector('.download-icon');
+        const closeIcon = document.querySelector('.close-icon');
+        
+        popover.classList.toggle('show');
+        
+        if (popover.classList.contains('show')) {
+          downloadIcon.style.display = 'none';
+          closeIcon.style.display = 'block';
+        } else {
+          downloadIcon.style.display = 'block';
+          closeIcon.style.display = 'none';
+        }
+      }
+
+      // Close popover when clicking outside
+      document.addEventListener('click', function(event) {
+        const downloadsContainer = document.querySelector('.floating-downloads');
+        const popover = document.getElementById('downloadsPopover');
+        const downloadIcon = document.querySelector('.download-icon');
+        const closeIcon = document.querySelector('.close-icon');
+        
+        if (!downloadsContainer.contains(event.target)) {
+          popover.classList.remove('show');
+          downloadIcon.style.display = 'block';
+          closeIcon.style.display = 'none';
+        }
+      });
     </script>
+
+    <!-- Floating Downloads Button -->
+    <div class="floating-downloads">
+      <button class="floating-downloads-btn" aria-label="Downloads" onclick="toggleDownloads()">
+        <svg class="download-icon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>Download</title>
+          <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+        </svg>
+        <svg class="close-icon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+          <title>Close</title>
+          <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+        </svg>
+      </button>
+      
+      <div class="downloads-popover" id="downloadsPopover">
+        <a href="Resume - Ronak Sonigra.pdf" download class="download-option">
+          <span>Resume</span>
+        </a>
+        <a href="Projects - Ronak Sonigra.pdf" download class="download-option">
+          <span>Projects</span>
+        </a>
+      </div>
+    </div>
+
   </body>
 </html>
