@@ -105,13 +105,17 @@
               <div class="download-buttons">
                 <a
                   href="Resume - Ronak Sonigra.pdf"
-                  download
+                  download="Resume-Ronak-Sonigra.pdf"
+                  target="_blank"
+                  rel="noopener"
                   class="btn download-btn"
                   >Resume</a
                 >
                 <a
                   href="Projects - Ronak Sonigra.pdf"
-                  download
+                  download="Projects-Ronak-Sonigra.pdf"
+                  target="_blank"
+                  rel="noopener"
                   class="btn download-btn"
                   >Projects</a
                 >
@@ -692,88 +696,41 @@
         return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       }
 
-      // iOS Download Fix
+      // iOS Download Helper
       function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
       }
 
-      function forcePDFDownload(url, filename) {
+      // Show download instructions for iOS users
+      function showIOSInstructions() {
         if (isIOS()) {
-          // For iOS, try multiple methods
-          // Method 1: Try blob download
-          fetch(url)
-            .then(response => response.blob())
-            .then(blob => {
-              const objectUrl = URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = objectUrl;
-              link.download = filename;
-              link.target = '_blank';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              URL.revokeObjectURL(objectUrl);
-            })
-            .catch(() => {
-              // Fallback: Open in new tab with download hint
-              window.open(url, '_blank');
-              // Show subtle notification instead of alert
-              showDownloadHint();
-            });
-        } else {
-          // Standard download for other browsers
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = filename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          const toast = document.createElement('div');
+          toast.style.cssText = `
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #007AFF; color: white; padding: 12px 20px; border-radius: 10px;
+            z-index: 9999; font-size: 14px; text-align: center; max-width: 280px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-family: -apple-system, sans-serif;
+          `;
+          toast.innerHTML = `
+            📱 Tap and hold the link → "Download Linked File"<br>
+            <small style="opacity: 0.8;">or use Share → Save to Files</small>
+          `;
+          document.body.appendChild(toast);
+          
+          setTimeout(() => toast.remove(), 4000);
         }
       }
 
-      function showDownloadHint() {
-        // Create a subtle notification
-        const notification = document.createElement('div');
-        notification.innerHTML = `
-          <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-                      background: #333; color: white; padding: 12px 20px; border-radius: 8px; 
-                      z-index: 10000; font-size: 14px; text-align: center; max-width: 300px;
-                      box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-            📱 On iOS: Tap the share button → "Save to Files" to download
-            <button onclick="this.parentElement.parentElement.remove()" 
-                    style="background: none; border: none; color: white; margin-left: 10px; 
-                           font-size: 16px; cursor: pointer;">✕</button>
-          </div>
-        `;
-        document.body.appendChild(notification);
-        
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-          if (notification.parentNode) {
-            notification.remove();
-          }
-        }, 5000);
-      }
-
-      // Add download event listeners
+      // Add event listeners for download hints
       document.addEventListener('DOMContentLoaded', function() {
-        // Handle resume download
-        const resumeBtn = document.querySelector('a[href="Resume - Ronak Sonigra.pdf"]');
-        if (resumeBtn) {
-          resumeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            forcePDFDownload('Resume - Ronak Sonigra.pdf', 'Resume - Ronak Sonigra.pdf');
+        const downloadBtns = document.querySelectorAll('.download-btn');
+        downloadBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            if (isIOS()) {
+              setTimeout(showIOSInstructions, 500);
+            }
           });
-        }
-
-        // Handle projects download  
-        const projectsBtn = document.querySelector('a[href="Projects - Ronak Sonigra.pdf"]');
-        if (projectsBtn) {
-          projectsBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            forcePDFDownload('Projects - Ronak Sonigra.pdf', 'Projects - Ronak Sonigra.pdf');
-          });
-        }
+        });
       });
 
       // Mobile Menu Toggle
