@@ -696,39 +696,55 @@
         return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       }
 
-      // iOS Download Helper
-      function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+      // Force download on all devices including iOS
+      function forceDownload(url, filename) {
+        // Try to fetch the file and create a blob URL
+        fetch(url)
+          .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.blob();
+          })
+          .then(blob => {
+            // Create object URL
+            const objectURL = URL.createObjectURL(blob);
+            
+            // Create temporary link
+            const link = document.createElement('a');
+            link.href = objectURL;
+            link.download = filename;
+            link.style.display = 'none';
+            
+            // Add to DOM, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Clean up object URL
+            setTimeout(() => URL.revokeObjectURL(objectURL), 100);
+          })
+          .catch(error => {
+            console.log('Fetch failed, trying fallback method:', error);
+            // Fallback: direct link approach
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.target = '_blank';
+            link.click();
+          });
       }
 
-      // Show download instructions for iOS users
-      function showIOSInstructions() {
-        if (isIOS()) {
-          const toast = document.createElement('div');
-          toast.style.cssText = `
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #007AFF; color: white; padding: 12px 20px; border-radius: 10px;
-            z-index: 9999; font-size: 14px; text-align: center; max-width: 280px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-family: -apple-system, sans-serif;
-          `;
-          toast.innerHTML = `
-            📱 Tap and hold the link → "Download Linked File"<br>
-            <small style="opacity: 0.8;">or use Share → Save to Files</small>
-          `;
-          document.body.appendChild(toast);
-          
-          setTimeout(() => toast.remove(), 4000);
-        }
-      }
-
-      // Add event listeners for download hints
+      // Add download event listeners
       document.addEventListener('DOMContentLoaded', function() {
         const downloadBtns = document.querySelectorAll('.download-btn');
+        
         downloadBtns.forEach(btn => {
-          btn.addEventListener('click', function() {
-            if (isIOS()) {
-              setTimeout(showIOSInstructions, 500);
-            }
+          btn.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default link behavior
+            
+            const url = this.getAttribute('href');
+            const filename = this.getAttribute('download') || url.split('/').pop();
+            
+            forceDownload(url, filename);
           });
         });
       });
