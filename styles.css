@@ -226,6 +226,17 @@ img {
   width: 100%;
 }
 
+/* Active nav link styles */
+.nav-links a.active {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.nav-links a.active::after {
+  width: 100%;
+  background-color: var(--primary-color);
+}
+
 .menu-toggle {
   display: none;
   flex-direction: column;

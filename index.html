@@ -698,6 +698,60 @@
         });
       }
 
+      // Scroll Spy for Navigation Highlighting
+      let isScrollingProgrammatically = false;
+      
+      function updateActiveNavLink() {
+        // Don't update during programmatic scrolling
+        if (isScrollingProgrammatically) return;
+        
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+        
+        let currentSection = '';
+        const scrollPosition = window.scrollY + 120; // Offset for header height
+        
+        // Find the current section
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          
+          if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            currentSection = section.getAttribute('id');
+          }
+        });
+        
+        // Handle edge cases
+        if (window.scrollY < 50) {
+          currentSection = 'home'; // At the very top
+        } else if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 10) {
+          currentSection = 'contact'; // At the bottom
+        }
+        
+        // Update nav link classes
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          const href = link.getAttribute('href').substring(1); // Remove #
+          if (href === currentSection) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      // Throttle scroll events for better performance
+      let scrollTimeout;
+      function throttledScrollSpy() {
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(updateActiveNavLink, 10);
+      }
+
+      // Initialize on load and scroll
+      window.addEventListener('scroll', throttledScrollSpy);
+      window.addEventListener('load', updateActiveNavLink);
+      document.addEventListener('DOMContentLoaded', updateActiveNavLink);
+
       // Smooth scrolling for navigation links
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener('click', function (e) {
@@ -713,10 +767,28 @@
           const targetElement = document.querySelector(targetId);
 
           if (targetElement) {
+            // Disable scroll spy during programmatic scrolling
+            isScrollingProgrammatically = true;
+            
+            // Immediately highlight the target section
+            const targetSection = targetId.substring(1); // Remove #
+            document.querySelectorAll('.nav-links a').forEach(link => {
+              link.classList.remove('active');
+              if (link.getAttribute('href').substring(1) === targetSection) {
+                link.classList.add('active');
+              }
+            });
+            
             window.scrollTo({
               top: targetElement.offsetTop - 70, // Adjust for header height
               behavior: 'smooth',
             });
+            
+            // Re-enable scroll spy after smooth scrolling completes
+            setTimeout(() => {
+              isScrollingProgrammatically = false;
+              updateActiveNavLink(); // Update in case user scrolled manually during timeout
+            }, 1000); // Adjust timing based on scroll duration
           }
         });
       });
