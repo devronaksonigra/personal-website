@@ -105,17 +105,13 @@
               <div class="download-buttons">
                 <a
                   href="Resume - Ronak Sonigra.pdf"
-                  download="Resume-Ronak-Sonigra.pdf"
-                  target="_blank"
-                  rel="noopener"
+                  download
                   class="btn download-btn"
                   >Resume</a
                 >
                 <a
                   href="Projects - Ronak Sonigra.pdf"
-                  download="Projects-Ronak-Sonigra.pdf"
-                  target="_blank"
-                  rel="noopener"
+                  download
                   class="btn download-btn"
                   >Projects</a
                 >
@@ -695,59 +691,6 @@
       function isIOS() {
         return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       }
-
-      // Force download on all devices including iOS
-      function forceDownload(url, filename) {
-        // Try to fetch the file and create a blob URL
-        fetch(url)
-          .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.blob();
-          })
-          .then(blob => {
-            // Create object URL
-            const objectURL = URL.createObjectURL(blob);
-            
-            // Create temporary link
-            const link = document.createElement('a');
-            link.href = objectURL;
-            link.download = filename;
-            link.style.display = 'none';
-            
-            // Add to DOM, click, and remove
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Clean up object URL
-            setTimeout(() => URL.revokeObjectURL(objectURL), 100);
-          })
-          .catch(error => {
-            console.log('Fetch failed, trying fallback method:', error);
-            // Fallback: direct link approach
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            link.target = '_blank';
-            link.click();
-          });
-      }
-
-      // Add download event listeners
-      document.addEventListener('DOMContentLoaded', function() {
-        const downloadBtns = document.querySelectorAll('.download-btn');
-        
-        downloadBtns.forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent default link behavior
-            
-            const url = this.getAttribute('href');
-            const filename = this.getAttribute('download') || url.split('/').pop();
-            
-            forceDownload(url, filename);
-          });
-        });
-      });
 
       // Mobile Menu Toggle
       const menuToggle = document.querySelector('.menu-toggle');
