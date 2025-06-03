@@ -226,9 +226,10 @@ img {
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 30px;
-  height: 21px;
+  width: 28px;
+  height: 20px;
   cursor: pointer;
+  position: relative;
 }
 
 .menu-toggle span {
@@ -236,7 +237,8 @@ img {
   height: 3px;
   width: 100%;
   background-color: var(--dark-color);
-  transition: var(--transition);
+  transition: all 0.3s ease;
+  border-radius: 1px;
 }
 
 /* Mobile navigation */
@@ -257,6 +259,7 @@ img {
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     transition: var(--transition);
+    margin-top: -1px;
   }
 
   .nav-links.active {
@@ -268,7 +271,10 @@ img {
   }
 
   .menu-toggle.active span:first-child {
-    transform: rotate(45deg) translate(5px, 6px);
+    position: absolute;
+    top: 50%;
+    transform: rotate(45deg);
+    transform-origin: center;
   }
 
   .menu-toggle.active span:nth-child(2) {
@@ -276,7 +282,10 @@ img {
   }
 
   .menu-toggle.active span:last-child {
-    transform: rotate(-45deg) translate(5px, -6px);
+    position: absolute;
+    top: 50%;
+    transform: rotate(-45deg);
+    transform-origin: center;
   }
 }
 
