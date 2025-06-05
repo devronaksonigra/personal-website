@@ -1,6 +1,3 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap');
-
 /* Base styles and resets */
 :root {
   --primary-color: #0073e6;
@@ -305,13 +302,6 @@ img {
 }
 
 /* Hero Section */
-.hero {
-  padding: 160px 0 100px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  position: relative;
-  overflow: hidden;
-}
-
 .hero::before {
   content: '';
   position: absolute;
@@ -336,39 +326,20 @@ img {
   z-index: 0;
 }
 
-.hero .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  z-index: 1;
-}
-
 .hero-content {
-  flex: 1;
-  max-width: 600px;
+  /* Animations and enhancements load with full CSS */
 }
 
 .hero-content h1 {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
-  color: var(--dark-color);
-  line-height: 1.2;
   animation: fadeInUp 0.8s ease;
 }
 
 .hero-content p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  color: var(--text-body);
   animation: fadeInUp 1s ease;
 }
 
 .hero-buttons {
-  display: flex;
-  gap: 1rem;
   animation: fadeInUp 1.2s ease;
-  align-items: center;
 }
 
 .hero-image {
@@ -426,11 +397,8 @@ img {
 }
 
 @media screen and (max-width: 768px) {
-  .hero .container {
-    flex-direction: column;
-    text-align: center;
-  }
-
+  /* Mobile hero styles moved to critical CSS */
+  
   .hero-content {
     margin-bottom: 3rem;
   }
