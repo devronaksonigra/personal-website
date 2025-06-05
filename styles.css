@@ -34,7 +34,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto', 'Arial', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--bg-color);
@@ -46,7 +46,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 1rem;
@@ -55,16 +55,6 @@ h6 {
   -moz-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
-}
-
-/* Use Google Fonts when loaded */
-[style*="--fonts-loaded: 1"] h1,
-[style*="--fonts-loaded: 1"] h2,
-[style*="--fonts-loaded: 1"] h3,
-[style*="--fonts-loaded: 1"] h4,
-[style*="--fonts-loaded: 1"] h5,
-[style*="--fonts-loaded: 1"] h6 {
-  font-family: 'Poppins', 'Roboto', sans-serif;
 }
 
 * {
@@ -76,24 +66,6 @@ h6 {
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-}
-
-body {
-  font-family: 'Roboto', 'Arial', sans-serif;
-  line-height: 1.6;
-  color: var(--text-color);
-  background-color: var(--bg-color);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 1rem;
 }
 
 a {
