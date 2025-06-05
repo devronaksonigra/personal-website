@@ -51,6 +51,7 @@
         max-width: 600px;
       }
       .hero-content h1 {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
         font-size: clamp(2rem, 5vw, 3rem) !important;
         margin-bottom: 1.5rem;
         color: #212529;
@@ -79,10 +80,27 @@
       }
     </style>
     
-    <!-- Optimized Google Fonts loading -->
+    <!-- Optimized Google Fonts loading - Non-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
+    
+    <!-- Font loading optimization -->
+    <script>
+      // Load fonts asynchronously without blocking
+      const fontLink = document.createElement('link');
+      fontLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap';
+      fontLink.rel = 'stylesheet';
+      fontLink.media = 'print';
+      fontLink.onload = function() {
+        this.media = 'all';
+        // Update font families when fonts are loaded
+        document.documentElement.style.setProperty('--fonts-loaded', '1');
+      };
+      document.head.appendChild(fontLink);
+    </script>
     
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/x-icon" href="favicon.ico">
