@@ -941,8 +941,90 @@
         const SUBMISSION_COOLDOWN = 30000; // 30 seconds
 
         if (contactForm) {
+          // Add real-time validation clearing
+          const nameField = document.getElementById('name');
+          const emailField = document.getElementById('email');
+          const subjectField = document.getElementById('subject');
+          const messageField = document.getElementById('message');
+
+          // Function to clear field error
+          function clearFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (field && errorElement) {
+              field.classList.remove('error');
+              errorElement.classList.remove('show');
+              errorElement.textContent = '';
+            }
+          }
+
+          // Add input event listeners to clear errors on typing
+          if (nameField) {
+            nameField.addEventListener('input', () => {
+              if (nameField.value.trim()) {
+                clearFieldError('name');
+              }
+            });
+            nameField.addEventListener('blur', () => {
+              if (nameField.value.trim()) {
+                clearFieldError('name');
+              }
+            });
+          }
+
+          if (emailField) {
+            emailField.addEventListener('input', () => {
+              const emailValue = emailField.value.trim();
+              if (emailValue) {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (emailRegex.test(emailValue)) {
+                  clearFieldError('email');
+                }
+              }
+            });
+            emailField.addEventListener('blur', () => {
+              const emailValue = emailField.value.trim();
+              if (emailValue) {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (emailRegex.test(emailValue)) {
+                  clearFieldError('email');
+                }
+              }
+            });
+          }
+
+          if (subjectField) {
+            subjectField.addEventListener('input', () => {
+              if (subjectField.value.trim()) {
+                clearFieldError('subject');
+              }
+            });
+            subjectField.addEventListener('blur', () => {
+              if (subjectField.value.trim()) {
+                clearFieldError('subject');
+              }
+            });
+          }
+
+          if (messageField) {
+            messageField.addEventListener('input', () => {
+              if (messageField.value.trim()) {
+                clearFieldError('message');
+              }
+            });
+            messageField.addEventListener('blur', () => {
+              if (messageField.value.trim()) {
+                clearFieldError('message');
+              }
+            });
+          }
+
           contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
+
+            if (isSubmitting) {
+              return; // Already submitting
+            }
 
             // Get form data
             const formData = new FormData(contactForm);
@@ -953,36 +1035,6 @@
 
             // Create content hash for duplicate detection
             const contentHash = btoa(userName + userEmail + userSubject + userMessage).slice(0, 20);
-
-            // Prevent duplicate submissions
-            const now = Date.now();
-            if (isSubmitting) {
-              return; // Already submitting
-            }
-            
-            if (now - lastSubmissionTime < SUBMISSION_COOLDOWN) {
-              const remainingTime = Math.ceil((SUBMISSION_COOLDOWN - (now - lastSubmissionTime)) / 1000);
-              document.getElementById('formMessages').innerHTML = `
-                <div class="error-message">
-                  Please wait ${remainingTime} seconds before sending another message.
-                </div>
-              `;
-              return;
-            }
-
-            // Check for exact duplicate content
-            if (contentHash === lastSubmissionHash) {
-              document.getElementById('formMessages').innerHTML = `
-                <div class="error-message">
-                  This message has already been sent. Please modify your message or wait before sending again.
-                </div>
-              `;
-              return;
-            }
-
-            isSubmitting = true;
-            lastSubmissionTime = now;
-            lastSubmissionHash = contentHash;
 
           const submitBtn = document.getElementById('submitBtn');
           const btnText = submitBtn.querySelector('.btn-text');
@@ -1047,8 +1099,37 @@
 
           // Stop if there are validation errors
           if (hasErrors) {
+            isSubmitting = false; // Reset submission state on validation error
             return;
           }
+
+          // Check cooldown and duplicates only after validation passes
+          const now = Date.now();
+          
+          if (now - lastSubmissionTime < SUBMISSION_COOLDOWN) {
+            const remainingTime = Math.ceil((SUBMISSION_COOLDOWN - (now - lastSubmissionTime)) / 1000);
+            document.getElementById('formMessages').innerHTML = `
+              <div class="error-message">
+                Please wait ${remainingTime} seconds before sending another message.
+              </div>
+            `;
+            return;
+          }
+
+          // Check for exact duplicate content
+          if (contentHash === lastSubmissionHash) {
+            document.getElementById('formMessages').innerHTML = `
+              <div class="error-message">
+                This message has already been sent. Please modify your message or wait before sending again.
+              </div>
+            `;
+            return;
+          }
+
+          // Set submission state and tracking
+          isSubmitting = true;
+          lastSubmissionTime = now;
+          lastSubmissionHash = contentHash;
 
           // Show loading state
           submitBtn.disabled = true;
@@ -1073,6 +1154,15 @@
                 </div>
               `;
               contactForm.reset();
+              
+              // Clear all errors and styling
+              document.querySelectorAll('.field-error').forEach(error => {
+                error.classList.remove('show');
+                error.textContent = '';
+              });
+              document.querySelectorAll('.form-group input, .form-group textarea').forEach(input => {
+                input.classList.remove('error');
+              });
             })
             .catch(function(error) {
               // Error message
