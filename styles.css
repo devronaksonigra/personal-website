@@ -234,6 +234,21 @@ img {
   height: 20px;
   cursor: pointer;
   position: relative;
+  
+  /* Reset button styles */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
+.menu-toggle:focus {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
 }
 
 .menu-toggle span {
