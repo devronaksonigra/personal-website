@@ -910,15 +910,93 @@
         });
       });
 
-      // Initialize EmailJS
-      emailjs.init('2YCDpv2VHRNqYcQvR');
+      // Initialize EmailJS when library is loaded
+      function initializeEmailJS() {
+        if (typeof emailjs !== 'undefined') {
+          emailjs.init('2YCDpv2VHRNqYcQvR');
+          setupContactForm();
+        } else {
+          // Retry in 100ms if EmailJS isn't loaded yet, with timeout
+          const retryCount = initializeEmailJS.retryCount || 0;
+          if (retryCount < 50) { // Max 5 seconds
+            initializeEmailJS.retryCount = retryCount + 1;
+            setTimeout(initializeEmailJS, 100);
+          } else {
+            // EmailJS failed to load, setup fallback
+            setupFallbackForm();
+          }
+        }
+      }
 
-      // Form submission with EmailJS
-      const contactForm = document.getElementById('contactForm');
+      // Fallback form when EmailJS fails to load
+      function setupFallbackForm() {
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+          contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            document.getElementById('formMessages').innerHTML = `
+              <div class="error-message">
+                Email service is temporarily unavailable. Please contact me directly at hello@ronaksonigra.com
+              </div>
+            `;
+          });
+        }
+      }
 
-      if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
-          e.preventDefault();
+      // Start initialization
+      initializeEmailJS();
+
+      // Form submission with EmailJS and duplicate prevention
+      function setupContactForm() {
+        const contactForm = document.getElementById('contactForm');
+        let isSubmitting = false;
+        let lastSubmissionTime = 0;
+        let lastSubmissionHash = '';
+        const SUBMISSION_COOLDOWN = 30000; // 30 seconds
+
+        if (contactForm) {
+          contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Get form data
+            const formData = new FormData(contactForm);
+            const userName = formData.get('from_name')?.trim();
+            const userEmail = formData.get('from_email')?.trim();
+            const userSubject = formData.get('subject')?.trim();
+            const userMessage = formData.get('message')?.trim();
+
+            // Create content hash for duplicate detection
+            const contentHash = btoa(userName + userEmail + userSubject + userMessage).slice(0, 20);
+
+            // Prevent duplicate submissions
+            const now = Date.now();
+            if (isSubmitting) {
+              return; // Already submitting
+            }
+            
+            if (now - lastSubmissionTime < SUBMISSION_COOLDOWN) {
+              const remainingTime = Math.ceil((SUBMISSION_COOLDOWN - (now - lastSubmissionTime)) / 1000);
+              document.getElementById('formMessages').innerHTML = `
+                <div class="error-message">
+                  Please wait ${remainingTime} seconds before sending another message.
+                </div>
+              `;
+              return;
+            }
+
+            // Check for exact duplicate content
+            if (contentHash === lastSubmissionHash) {
+              document.getElementById('formMessages').innerHTML = `
+                <div class="error-message">
+                  This message has already been sent. Please modify your message or wait before sending again.
+                </div>
+              `;
+              return;
+            }
+
+            isSubmitting = true;
+            lastSubmissionTime = now;
+            lastSubmissionHash = contentHash;
 
           const submitBtn = document.getElementById('submitBtn');
           const btnText = submitBtn.querySelector('.btn-text');
@@ -936,15 +1014,15 @@
           formMessages.innerHTML = '';
 
           // Get form values and validate
-          const name = document.getElementById('name').value.trim();
-          const email = document.getElementById('email').value.trim();
-          const subject = document.getElementById('subject').value.trim();
-          const message = document.getElementById('message').value.trim();
+          const formName = document.getElementById('name').value.trim();
+          const formEmail = document.getElementById('email').value.trim();
+          const formSubject = document.getElementById('subject').value.trim();
+          const formMessage = document.getElementById('message').value.trim();
 
           let hasErrors = false;
 
           // Validate name
-          if (!name) {
+          if (!formName) {
             document.getElementById('nameError').textContent = 'Name is required';
             document.getElementById('nameError').classList.add('show');
             document.getElementById('name').classList.add('error');
@@ -953,12 +1031,12 @@
 
           // Validate email
           const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          if (!email) {
+          if (!formEmail) {
             document.getElementById('emailError').textContent = 'Email is required';
             document.getElementById('emailError').classList.add('show');
             document.getElementById('email').classList.add('error');
             hasErrors = true;
-          } else if (!emailRegex.test(email)) {
+          } else if (!emailRegex.test(formEmail)) {
             document.getElementById('emailError').textContent = 'Please enter a valid email address (e.g., name@example.com)';
             document.getElementById('emailError').classList.add('show');
             document.getElementById('email').classList.add('error');
@@ -966,7 +1044,7 @@
           }
 
           // Validate subject
-          if (!subject) {
+          if (!formSubject) {
             document.getElementById('subjectError').textContent = 'Subject is required';
             document.getElementById('subjectError').classList.add('show');
             document.getElementById('subject').classList.add('error');
@@ -974,7 +1052,7 @@
           }
 
           // Validate message
-          if (!message) {
+          if (!formMessage) {
             document.getElementById('messageError').textContent = 'Message is required';
             document.getElementById('messageError').classList.add('show');
             document.getElementById('message').classList.add('error');
@@ -993,11 +1071,11 @@
           formMessages.innerHTML = '';
 
           const templateParams = {
-            from_name: name,
-            from_email: email,
-            subject: subject,
-            message: message,
-            email: email // for reply-to
+            from_name: formName,
+            from_email: formEmail,
+            subject: formSubject,
+            message: formMessage,
+            email: formEmail // for reply-to
           };
 
           emailjs.send('service_9gbni0u', 'template_neshn3c', templateParams)
@@ -1020,12 +1098,14 @@
               console.error('EmailJS error:', error);
             })
             .finally(function() {
-              // Reset button state
+              // Reset button and submission state
+              isSubmitting = false;
               submitBtn.disabled = false;
               btnText.style.display = 'inline';
               btnLoading.style.display = 'none';
             });
-        });
+          });
+        }
       }
 
       // Animate skill bars on scroll
